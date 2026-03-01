@@ -4,35 +4,25 @@
 }
 
 body { 
-    background-color: rgba(113, 127, 207, 0.753);
-}
-
-main {
-    background-color: white;
-    width: 700px;
-    margin: auto;
-    padding: 10px;
-    box-shadow: 3px 3px 5px rgba(80, 80, 80, 0.459);
-}
-
-img.lado {
-    float: right;
-}
-
-.video {
-    position: relative;
-    width: 100%;
-    padding-bottom: 56.25%; /* dá proporção 16:9, padrão do YouTube */
-}
-
-.video iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
+    background-image: url("../imagens/massa.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
     height: 100%;
 }
 
-.btn-voltar { 
-    margin-top: 25px;
+main {
+    max-width: 1200px;
+    margin: auto;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 3px 3px 5px rgba(80, 80, 80, 0.459);
+}
+
+img.capa {
+    display: block;
+    max-width: 100%;
+    height : auto;
 }
