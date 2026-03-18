@@ -1,5 +1,5 @@
 import sqlite3
-import operador_refatorado as ops
+import operador_do_database as ops
 
 conexao = sqlite3.connect("cardapio.db")
 cursor = conexao.cursor()
