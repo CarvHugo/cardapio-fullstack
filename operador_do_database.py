@@ -242,10 +242,12 @@ def listagem():
                         print('\n\033[34mDigite ENTER para voltar ao MENU PRINCIPAL.\033[m')
                         sleep(0.03)
                         print('-' * 58)
+                        sleep(0.03)
                     tela_delecao()
                 
                     if erro_delecao:
                         print(erro_delecao)
+                        sleep(0.03)
                         erro_delecao = ''
                     
                     try:
@@ -289,7 +291,8 @@ def listagem():
                         break
                     estrutura_de_menu('\033[31mDELEÇÃO DE REGISTROS\033[m')
                     tela_delecao()
-                    print(f'ID: {numero_id}')        
+                    print(f'ID: {numero_id}')
+                    sleep(0.03)       
                     
                     
                     if confirmacao not in('S', 'N', None):
@@ -363,13 +366,18 @@ def listagem():
                                 estrutura_de_menu('\033[33mEDIÇÃO DE PREÇO\033[m')
                                 def tela_preco():
                                     print('\033[34mPara editar o preço, digite o número ID do alimento\033[m')
+                                    sleep(0.03)
                                     print('ou')
+                                    sleep(0.03)
                                     print('\033[34mPressione ENTER para voltar\033[m')
+                                    sleep(0.03)
                                     print('-' * 58)
+                                    sleep(0.03)
                                 tela_preco()
                                 
                                 if erro_preco:
                                     print(erro_preco)
+                                    sleep(0.03)
                                     erro_preco = ''
                         
                                 try:
@@ -413,10 +421,13 @@ def listagem():
                                                         """)
                                         row = cursor.fetchone()
                                         nome, preco = row
+                                        sleep(0.03)
                                         print(f'Alimento: {nome}\nPreço: R${preco:.2f}')
                                     if erro_preco:
+                                        sleep(0.03)
                                         print(erro_preco)
                                         erro_preco = ''
+                                        sleep(0.03)
                                     
                                     try:
                                         novo_preco = str(input('Novo preço: R$ ')).replace(',', '.')
@@ -443,6 +454,7 @@ def listagem():
                                                        UPDATE produtos SET preco = {novo_preco}
                                                        WHERE id = {numero_id};""")
                                         conexao.commit()
+                                        sleep(0.03)
                                         print('\033[32mPreço atualizado!\033[m')
                                         retornar('manualmente')
                                         break
@@ -454,14 +466,19 @@ def listagem():
                                 estrutura_de_menu('\033[33mEDIÇÃO DE NOME\033[m')
                                 def tela_nome():
                                     print('\033[34mPara editar o nome, digite o número ID do alimento\033[m')
+                                    sleep(0.03)
                                     print('ou')
+                                    sleep(0.03)
                                     print('\033[34mPressione ENTER para voltar\033[m')
+                                    sleep(0.03)
                                     print('-' * 58)
+                                    sleep(0.03)
                                 tela_nome()
                                 
                                 if erro_nome:
                                     print(erro_nome)
                                     erro_nome = ''
+                                    sleep(0.03)
                         
                                 try:
                                     numero_id = input('ID ou ENTER: ').strip()
@@ -504,10 +521,13 @@ def listagem():
                                                         """)
                                         row = cursor.fetchone()
                                         nome, = row
+                                        sleep(0.03)
                                         print(f'Alimento: {nome}')
                                     if erro_nome:
+                                        sleep(0.03)
                                         print(erro_nome)
                                         erro_nome = ''
+                                        sleep(0.03)
                                     
                                     try:
                                         novo_nome = input('Novo nome: ')
@@ -515,8 +535,12 @@ def listagem():
                                         if novo_nome == '':
                                             break
                                     
+                                        if not novo_nome.isalpha:
+                                            raise ValueError
+                                    
                                     except ValueError:
                                         erro_preco = '\033[31mDigite apenas caracteres alfabéticos!\033[m'
+                                        continue
 
                                     except KeyboardInterrupt:
                                         os.system('cls')
@@ -528,6 +552,7 @@ def listagem():
                                                        UPDATE produtos SET nome = "{novo_nome}"
                                                        WHERE id = {numero_id};""")
                                         conexao.commit()
+                                        sleep(0.03)
                                         print('\033[32mNome atualizado!\033[m')
                                         retornar('manualmente')
                                         break
@@ -539,14 +564,19 @@ def listagem():
                                 estrutura_de_menu('\033[33mEDIÇÃO DE CATEGORIA\033[m')
                                 def tela_categoria():
                                     print('\033[34mPara editar a categoria, digite o número ID do alimento\033[m')
+                                    sleep(0.03)
                                     print('ou')
+                                    sleep(0.03)
                                     print('\033[34mPressione ENTER para voltar\033[m')
+                                    sleep(0.03)
                                     print('-' * 58)
+                                    sleep(0.03)
                                 tela_categoria()
                                 
                                 if erro_categoria:
                                     print(erro_categoria)
                                     erro_categoria = ''
+                                    sleep(0.03)
                         
                                 try:
                                     numero_id = input('ID ou ENTER: ').strip()
@@ -583,6 +613,7 @@ def listagem():
                                     tela_categoria()
                                     if resultado is not None:
                                         print(f'ID: {numero_id}')
+                                        sleep(0.03)
                                         cursor.execute(f"""
                                                         SELECT nome, categoria FROM produtos
                                                         WHERE id = {numero_id};
@@ -590,9 +621,11 @@ def listagem():
                                         row = cursor.fetchone()
                                         nome, categoria = row
                                         print(f'Alimento: {nome}\nCategoria: {categoria}')
+                                        sleep(0.03)
                                     if erro_categoria:
                                         print(erro_categoria)
                                         erro_categoria = ''
+                                        sleep(0.03)
                                     
                                     try:
                                         nova_categoria = input('Nova categoria: ')
@@ -613,6 +646,7 @@ def listagem():
                                                        UPDATE produtos SET categoria = "{nova_categoria}"
                                                        WHERE id = {numero_id};""")
                                         conexao.commit()
+                                        sleep(0.03)
                                         print('\033[32mCategoria atualizada!\033[m')
                                         retornar('manualmente')
                                         break
