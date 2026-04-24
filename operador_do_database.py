@@ -86,7 +86,19 @@ def listagem():
         else:
             if escolha == 1:
                 estrutura_de_menu('\033[33mALIMENTOS CADASTRADOS\033[m')
-                obter_lista_do_cardapio()
+                resultado = obter_lista_do_cardapio()
+                if isinstance(resultado, list):
+                    print(f'{"ID":<5} {"Nome":<26} {"Categoria":<15} {"Preço":<10}')
+                    sleep(0.03)
+            
+                    for item in resultado:
+                        print(f'{item["id"]:<5} {item["nome"]:<26} {item["categoria"]:<15} {item["preco"]:<10}')
+                        sleep(0.03)
+                        
+                    print('-' * 58)
+                    sleep(0.03)
+                else:
+                    print(resultado)
                 retornar('manualmente')
             
             elif escolha == 2:
