@@ -2,7 +2,7 @@ import sqlite3
 import os
 from time import sleep
 import sys
-from api_client import obter_lista_do_cardapio, cadastrar_produto
+from api_client import obter_lista_do_cardapio, cadastrar_produto, deletar_produto
 
 conexao = sqlite3.connect("cardapio.db")
 cursor = conexao.cursor()
@@ -275,17 +275,10 @@ def listagem():
                         sys.exit()
                     
                     else:
-                        cursor.execute(f"""SELECT id FROM produtos WHERE id = {numero_id};""")
-                        resultado = cursor.fetchone()
-                        
-                        if resultado is None:
-                            erro_delecao = f'\033[31mID {numero_id} não cadastrado\033[m'
-                        
-                        else:
-                            estrutura_de_menu('\033[31mDELEÇÃO DE REGISTROS\033[m')
-                            tela_delecao()
-                            print(f'ID: {numero_id}')
-                            break
+                        estrutura_de_menu('\033[31mDELEÇÃO DE REGISTROS\033[m')
+                        tela_delecao()
+                        print(f'ID: {numero_id}')
+                        break
                 
                 confirmacao = None            
                 while True:
@@ -318,9 +311,8 @@ def listagem():
                             break
                         
                         elif confirmacao =='S': 
-                            cursor.execute(f"""DELETE FROM produtos WHERE id = {numero_id};""")
-                            conexao.commit()
-                            print('\n\033[32mProduto deletado!\033[m')
+                            resultado = deletar_produto(numero_id)
+                            print(resultado)
                             retornar('manualmente')
                             break
             

@@ -55,3 +55,22 @@ async def cadastro_de_produtos(produto: Produto):
         return produto
     
     raise HTTPException(status_code=422, detail="Ocorreu um erro com a validação dos dados! Digite dados válidos para cadastro.")
+
+@app.delete("/produtos/{id}")
+async def delecao_de_produtos(id: int):
+    conexao = sqlite3.connect("cardapio.db")
+    cursor = conexao.cursor()
+    
+    cursor.execute("SELECT * FROM produtos WHERE id = ?", (id,))
+    verificador_de_linha = cursor.fetchone()
+    
+    if verificador_de_linha is not None:
+        cursor.execute("DELETE FROM produtos WHERE id = ?", (id,))
+        
+        conexao.commit()
+        conexao.close()
+        return {"message": f'{id} deletado!'}
+    
+    conexao.close()
+    
+    raise HTTPException(status_code=404, detail=f"Deleção falhou! O produto de ID {id} não foi encontrado.")

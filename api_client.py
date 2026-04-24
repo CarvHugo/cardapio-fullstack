@@ -45,3 +45,25 @@ def cadastrar_produto(nome, categoria, preco):
     
     else:
         return (f'\033[31mOcorreu um erro. Tente novamente! HTTP {resposta.status_code}\033[m')
+    
+def deletar_produto(id: int):
+    url_base = "http://127.0.0.1:8000"
+    
+    try:
+        resposta = requests.delete(f'{url_base}/produtos/{id}')
+        
+    except ConnectionError:
+        return ('\033[31mNão foi possível conectar à API. Verifique se o servidor está rodando.\033[m')
+    
+    except RequestException:
+        return ('\033[31mOcorreu um erro! Tente novamente\033[m')
+    
+    if resposta.status_code in range(200, 300):
+        return (f'\033[32mProduto deletado com sucesso! HTTP {resposta.status_code}\033[m')
+    
+    else:
+        if resposta.status_code == 404:
+            detalhe_da_resposta = resposta.json()['detail']
+            return f'\033[31m{detalhe_da_resposta}\033[m'
+        
+        return (f'\033[31mOcorreu um erro. Tente novamente! HTTP {resposta.status_code}\033[m')
