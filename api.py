@@ -86,17 +86,26 @@ async def atualizar_produto(id: int, produtopatch: ProdutoPatch):
     conexao = sqlite3.connect("cardapio.db")
     cursor = conexao.cursor()
     
+    if (produtopatch.nome, produtopatch.categoria, produtopatch.preco).count(None) == 3:
+        conexao.close()
+        raise HTTPException(status_code=422, detail="É necessário fornecer algum dado para atualização!")
+    
+        
     if produtopatch.nome is not None:
         cursor.execute("UPDATE produtos SET nome = ? WHERE id = ?", (produtopatch.nome, id))
-    
-    elif produtopatch.categoria is not None:
+        verificador_de_nome = cursor.rowcount
+            
+    if produtopatch.categoria is not None:
         cursor.execute("UPDATE produtos SET categoria = ? WHERE id = ?", (produtopatch.categoria, id))
-    elif produtopatch.preco is not None:
+        verificador_de_categoria = cursor.rowcount
+            
+    if produtopatch.preco is not None:
         cursor.execute("UPDATE produtos SET preco = ? WHERE id = ?", (produtopatch.preco, id))
+        verificador_de_preco = cursor.rowcount
     
-    else:
+    if (verificador_de_nome + verificador_de_categoria + verificador_de_preco == 0):
         conexao.close()
-        return "Ocorreu um erro!"
+        raise HTTPException(status_code=404, detail=f"Erro! ID {id} não encontrado.")
     
     conexao.commit()
     conexao.close()
