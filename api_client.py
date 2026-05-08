@@ -1,9 +1,14 @@
 import requests
 from requests.exceptions import ConnectionError, RequestException
+import os
+
+API_KEY = os.getenv("API_KEY")
+
+HEADERS = {"X-API-KEY": API_KEY}
 
 def obter_lista_do_cardapio():
     try:
-        resposta = requests.get("http://127.0.0.1:8000/produtos")
+        resposta = requests.get("https://fastapi-cardapio-api.onrender.com/produtos")
 
     except ConnectionError:
         return (f'\033[31mNão foi possível conectar à API. Verifique se o servidor está rodando.\033[m')
@@ -20,7 +25,7 @@ def obter_lista_do_cardapio():
         return(f'\033[31mOcorreu um erro ao buscar os produtos!\033[m. HTTP {resposta.status_code}')
 
 def cadastrar_produto(nome, categoria, preco):
-    url_base = "http://127.0.0.1:8000"
+    url_base = "https://fastapi-cardapio-api.onrender.com"
     
     try:
     
@@ -31,7 +36,9 @@ def cadastrar_produto(nome, categoria, preco):
                 "nome": nome,
                 "categoria": categoria,
                 "preco": preco
-            }
+            },
+            
+            headers=HEADERS
         )
     
     except ConnectionError:
@@ -45,12 +52,15 @@ def cadastrar_produto(nome, categoria, preco):
     
     else:
         return (f'\033[31mOcorreu um erro. Tente novamente! HTTP {resposta.status_code}\033[m')
-    
+
+
 def deletar_produto(id: int):
-    url_base = "http://127.0.0.1:8000"
+    url_base = "https://fastapi-cardapio-api.onrender.com"
     
     try:
-        resposta = requests.delete(f'{url_base}/produtos/{id}')
+        resposta = requests.delete(f'{url_base}/produtos/{id}',
+        headers=HEADERS
+        )
         
     except ConnectionError:
         return ('\033[31mNão foi possível conectar à API. Verifique se o servidor está rodando.\033[m')
@@ -69,7 +79,7 @@ def deletar_produto(id: int):
         return (f'\033[31mOcorreu um erro. Tente novamente! HTTP {resposta.status_code}\033[m')
     
 def atualizar_produto(id=None, nome=None, categoria=None, preco=None):
-    url_base = "http://127.0.0.1:8000"
+    url_base = "https://fastapi-cardapio-api.onrender.com"
     
     dados = {}
     
@@ -84,7 +94,7 @@ def atualizar_produto(id=None, nome=None, categoria=None, preco=None):
     
     try:
         resposta = requests.patch(
-        f'{url_base}/produtos/{id}', json=dados)   
+        f'{url_base}/produtos/{id}', json=dados, headers=HEADERS)   
     
     except ConnectionError:
         return ('\033[31mNão foi possível conectar à API. Verifique se o servidor está rodando.\033[m')
@@ -102,7 +112,7 @@ def atualizar_produto(id=None, nome=None, categoria=None, preco=None):
     return (f'\033[31mOcorreu um erro. Tente novamente! HTTP {resposta.status_code}\033[m')
 
 def consultar_produto(id):
-    url_base = "http://127.0.0.1:8000"
+    url_base = "https://fastapi-cardapio-api.onrender.com"
     
     try:
         resposta = requests.get(f'{url_base}/produtos/{id}')

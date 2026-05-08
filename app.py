@@ -1,12 +1,19 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
 from pydantic import BaseModel
 from typing import Optional
+import os
 
 from banco_de_dados import garantir_tabela_produtos, buscar_produtos
 
 app = FastAPI()
+
+API_KEY = os.getenv("API_KEY")
+
+def valida_api_key(x_api_key: str):
+    if x_api_key != API_KEY:
+        raise HTTPException(status_code=401, detail="API key inválida!")
 
 @app.on_event("startup")
 def inicializar_banco():
@@ -49,7 +56,9 @@ async def listar_produtos():
     return lista_produtos
 
 @app.post("/produtos")
-async def cadastro_de_produtos(produto: Produto):
+async def cadastro_de_produtos(produto: Produto, x_api_key: str = Header()):
+    valida_api_key(x_api_key)
+    
     produto.nome = produto.nome.strip()
     produto.categoria = produto.categoria.strip()
     
@@ -67,7 +76,9 @@ async def cadastro_de_produtos(produto: Produto):
     raise HTTPException(status_code=422, detail="Ocorreu um erro com a validação dos dados! Digite dados válidos para cadastro.")
 
 @app.delete("/produtos/{id}")
-async def delecao_de_produtos(id: int):
+async def delecao_de_produtos(id: int, x_api_key: str = Header()):
+    valida_api_key(x_api_key)
+    
     conexao = sqlite3.connect("cardapio.db")
     cursor = conexao.cursor()
     
@@ -86,7 +97,9 @@ async def delecao_de_produtos(id: int):
     raise HTTPException(status_code=404, detail=f"Deleção falhou! O produto de ID {id} não foi encontrado.")
 
 @app.patch("/produtos/{id}")
-async def atualizar_produto(id: int, produtopatch: ProdutoPatch):
+async def atualizar_produto(id: int, produtopatch: ProdutoPatch, x_api_key: str = Header()):
+    valida_api_key(x_api_key)
+    
     conexao = sqlite3.connect("cardapio.db")
     cursor = conexao.cursor()
     
