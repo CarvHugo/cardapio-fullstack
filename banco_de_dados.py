@@ -41,3 +41,21 @@ def cadastra_produtos(nome, categoria, preco):
         conexao.close()
 
         return nome, categoria, preco
+    
+def tenta_delecao(id):
+    conexao = sqlite3.connect("cardapio.db")
+    cursor = conexao.cursor()
+    
+    cursor.execute("SELECT * FROM produtos WHERE id = ?", (id,))
+    verificador_de_linha = cursor.fetchone()
+    print(verificador_de_linha)
+
+    if verificador_de_linha is not None:
+        cursor.execute("DELETE FROM produtos WHERE id = ?", (id,))
+        
+        conexao.commit()
+        conexao.close()
+        return {"message": f'{id} deletado!'}
+    
+    conexao.close()
+    return None

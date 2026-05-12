@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from typing import Optional
 import os
 
-from banco_de_dados import garantir_tabela_produtos, buscar_produtos, cadastra_produtos
+from banco_de_dados import garantir_tabela_produtos, buscar_produtos, cadastra_produtos, tenta_delecao
 
 app = FastAPI()
 
@@ -70,22 +70,12 @@ async def cadastro_de_produtos(produto: Produto, x_api_key: str = Header()):
 async def delecao_de_produtos(id: int, x_api_key: str = Header()):
     valida_api_key(x_api_key)
     
-    conexao = sqlite3.connect("cardapio.db")
-    cursor = conexao.cursor()
+    delecao = tenta_delecao(id)
     
-    cursor.execute("SELECT * FROM produtos WHERE id = ?", (id,))
-    verificador_de_linha = cursor.fetchone()
-    
-    if verificador_de_linha is not None:
-        cursor.execute("DELETE FROM produtos WHERE id = ?", (id,))
-        
-        conexao.commit()
-        conexao.close()
-        return {"message": f'{id} deletado!'}
-    
-    conexao.close()
-    
-    raise HTTPException(status_code=404, detail=f"Deleção falhou! O produto de ID {id} não foi encontrado.")
+    if delecao is None:
+        raise HTTPException(status_code=404, detail=f"Deleção falhou! O produto de ID {id} não foi encontrado.")
+
+    return delecao
 
 @app.patch("/produtos/{id}")
 async def atualizar_produto(id: int, produtopatch: ProdutoPatch, x_api_key: str = Header()):
