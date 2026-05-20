@@ -87,6 +87,8 @@ async def atualizar_produto(id: int, produtopatch: ProdutoPatch, x_api_key: str 
     
     if atualizacao == False:
         raise HTTPException(status_code=404, detail=f"Erro! ID {id} não encontrado.")
+    
+    return atualizacao
 
     
 @app.get("/produtos/{id}")
